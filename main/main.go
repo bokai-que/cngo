@@ -11,11 +11,12 @@ import (
 
 func main() {
 	filename := "./test.go"
-
-	core.VariablesReplace = make(map[string]string)
 	core.ReservedWord = make(map[string]string)
-	lang.InitReservedWord()
+	lang.ZhCN()                                     //关键字 map[]
+	core.VariablesReplace = make(map[string]string) //空 map[]
 	core.GenReservedWordOrder()
+
+	fmt.Printf("%q\n\n", core.ReservedWord)
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -23,6 +24,7 @@ func main() {
 	}
 	defer file.Close()
 	reader := bufio.NewReader(file)
+
 	//scanner := bufio.NewScanner(file)
 	fileOutContent := ""
 	var lines []string
@@ -40,13 +42,13 @@ func main() {
 			break
 		}
 	}
-
+	//fmt.Printf("%s\n\n", lines)
 	core.FindVariablesReplace(lines)
-
 	for i := 0; i < len(lines); i++ {
 		line2 := core.ReplaceKeyWord(lines[i])
 		fileOutContent += line2 + "\r\n"
 	}
+	//fmt.Printf("%s\n\n", fileOutContent)
 
 	//path := strings.ReplaceAll(filename,".cn.go",".go")
 	path := filename + ".run.go"
@@ -65,7 +67,7 @@ func mainBak() {
 
 	core.VariablesReplace = make(map[string]string)
 	core.ReservedWord = make(map[string]string)
-	lang.InitReservedWord()
+	lang.ZhCN()
 	core.GenReservedWordOrder()
 
 	file, err := os.Open(filename)

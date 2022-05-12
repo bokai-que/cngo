@@ -281,8 +281,10 @@ func GenReservedWordOrder() {
 	for k, _ := range ReservedWord {
 		wordOrder = append(wordOrder, k)
 	}
+	//fmt.Printf("%q\n\n", wordOrder)
 	sort.Stable(wordOrder)
 	reservedWordOrder = wordOrder
+	//fmt.Printf("%q\n\n", wordOrder)
 }
 
 func genVariableReplaceOrder() {
