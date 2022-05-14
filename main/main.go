@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"gitee.com/bokai-que/cngo/core"
-	"gitee.com/bokai-que/cngo/kernel"
 	"gitee.com/bokai-que/cngo/lang"
 	"os"
 	"strings"
@@ -36,7 +35,7 @@ func main() {
 	core.ReservedWord = make(map[string]string)
 	lang.ZhCN()
 	//fmt.Printf("%q\n", core.ReservedWord)
-	kernel.GenReservedWordOrder()
+	core.GenReservedWordOrder()
 	reader := bufio.NewReader(file)
 	fileOutContent := ""
 	var lines []string
@@ -56,7 +55,7 @@ func main() {
 
 	for i := 0; i < len(lines); i++ {
 		//fmt.Printf("%q\n", lines[i])
-		line2 := kernel.ReplaceKeyWord(lines[i])
+		line2 := core.ReplaceKeyWord(lines[i])
 		//fmt.Printf("%q\n", line2)
 		fileOutContent += line2 + "\r\n"
 	}
@@ -76,7 +75,7 @@ func mainBak() {
 	core.VariablesReplace = make(map[string]string)
 	core.ReservedWord = make(map[string]string)
 	lang.ZhCN()
-	kernel.GenReservedWordOrder()
+	core.GenReservedWordOrder()
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -105,7 +104,7 @@ func mainBak() {
 	core.FindVariablesReplace(lines)
 
 	for i := 0; i < len(lines); i++ {
-		line2 := kernel.ReplaceKeyWord(lines[i])
+		line2 := core.ReplaceKeyWord(lines[i])
 		fileOutContent += line2 + "\r\n"
 	}
 
