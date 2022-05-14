@@ -4,34 +4,43 @@ import (
 	"bufio"
 	"fmt"
 	"gitee.com/bokai-que/cngo/core"
+	"gitee.com/bokai-que/cngo/kernel"
 	"gitee.com/bokai-que/cngo/lang"
 	"os"
 	"strings"
 )
 
-func main() {
+func openFile() *os.File {
+	//if len(os.Args) < 2 {
+	//	fmt.Println("请把 你编写的 .cn.go 程序文件拖进来")
+	//	return nil
+	//}
+	//filename := os.Args[1]
 	filename := "./test.go"
-	core.ReservedWord = make(map[string]string)
-	lang.ZhCN()                                     //关键字 map[]
-	core.VariablesReplace = make(map[string]string) //空 map[]
-	core.GenReservedWordOrder()
-
-	fmt.Printf("%q\n\n", core.ReservedWord)
+	fmt.Println("文件名：", filename)
 
 	file, err := os.Open(filename)
 	if err != nil {
+		return nil
+	}
+	return file
+}
+
+func main() {
+	file := openFile()
+	if file == nil {
 		return
 	}
 	defer file.Close()
+	core.VariablesReplace = make(map[string]string)
+	core.ReservedWord = make(map[string]string)
+	lang.ZhCN()
+	//fmt.Printf("%q\n", core.ReservedWord)
+	kernel.GenReservedWordOrder()
 	reader := bufio.NewReader(file)
-
-	//scanner := bufio.NewScanner(file)
 	fileOutContent := ""
 	var lines []string
-	//for scanner.Scan() {
 	for {
-		//line, prefix, err := reader.ReadLine();
-		//line := scanner.Text()
 		line, err := reader.ReadString('\n')
 		line1 := string(line)
 		line1 = strings.ReplaceAll(line1, "\r\n", "")
@@ -42,17 +51,16 @@ func main() {
 			break
 		}
 	}
-	//fmt.Printf("%s\n\n", lines)
+	//fmt.Printf("%q\n", lines)
 	core.FindVariablesReplace(lines)
+
 	for i := 0; i < len(lines); i++ {
-		line2 := core.ReplaceKeyWord(lines[i])
+		//fmt.Printf("%q\n", lines[i])
+		line2 := kernel.ReplaceKeyWord(lines[i])
+		//fmt.Printf("%q\n", line2)
 		fileOutContent += line2 + "\r\n"
 	}
-	//fmt.Printf("%s\n\n", fileOutContent)
-
-	//path := strings.ReplaceAll(filename,".cn.go",".go")
-	path := filename + ".run.go"
-	core.WriteFile(path, fileOutContent)
+	//fmt.Printf("%q", fileOutContent)
 }
 
 func mainBak() {
@@ -68,7 +76,7 @@ func mainBak() {
 	core.VariablesReplace = make(map[string]string)
 	core.ReservedWord = make(map[string]string)
 	lang.ZhCN()
-	core.GenReservedWordOrder()
+	kernel.GenReservedWordOrder()
 
 	file, err := os.Open(filename)
 	if err != nil {
@@ -97,7 +105,7 @@ func mainBak() {
 	core.FindVariablesReplace(lines)
 
 	for i := 0; i < len(lines); i++ {
-		line2 := core.ReplaceKeyWord(lines[i])
+		line2 := kernel.ReplaceKeyWord(lines[i])
 		fileOutContent += line2 + "\r\n"
 	}
 
